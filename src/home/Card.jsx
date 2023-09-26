@@ -8,7 +8,7 @@ const Card = ({imgUrl}) => {
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis, molestias.`;
   const author = 'aaaaa';
   const date = '2023.09.21';
-  const commentCnt = 1;
+  const commentsCnt = 1;
   return (
     <CardWrapper>
       <Link href={'#'}>
@@ -23,7 +23,7 @@ const Card = ({imgUrl}) => {
             <SubInfo>
               <span>{date}</span>
               <span>{' / '}</span>
-              <span>{`${commentCnt} Comments`}</span>
+              <span>{`${commentsCnt} Comments`}</span>
             </SubInfo>
           </ContentShortCut>
           <ContentInfo>
