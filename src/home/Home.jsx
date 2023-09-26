@@ -1,9 +1,28 @@
 import styled from "styled-components"
 import { Link } from "react-router-dom"
 import Card from "./Card"
+import { useEffect, useState } from "react"
+import { getPost } from "../../firebase"
 
 export default function Home() {
 
+  const [posts, setPosts] = useState(new Array());
+  useEffect(() => {
+    let ignore = false;
+    async function get(){
+      const response = await getPost();
+      if(!ignore){
+        setPosts(response);
+      }
+    }
+
+    get();
+
+    return () => {
+      ignore = true;
+    }
+  }, [])
+  
   return (
     <PageWrapper>
       <Header>
@@ -30,7 +49,10 @@ export default function Home() {
           </div>
         </FeedHeader>
         <FeedContents>
-          {Array(5).fill().map((v, i) => <Card key={i} imgUrl={'https://placehold.co/600x400'}/>)}
+          {/* {Array(5).fill().map((v, i) => <Card key={i} imgUrl={'https://placehold.co/600x400'}/>)} */}
+          {posts.map((v) => {
+            return <Card key={v._id} imgUrl={'https://placehold.co/600x400'} post={v}/>
+          })}
         </FeedContents>
       </MainFeed>
     </PageWrapper>

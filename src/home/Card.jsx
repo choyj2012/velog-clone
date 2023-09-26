@@ -1,14 +1,15 @@
 import styled from "styled-components"
 import { Link } from "react-router-dom"
+import { Timestamp } from "firebase/firestore";
 
-const Card = ({imgUrl}) => {
-  const title = 'Title1';
-  const summary = 
-    `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis, molestias.
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis, molestias.`;
-  const author = 'aaaaa';
-  const date = '2023.09.21';
-  const commentsCnt = 1;
+const Card = ({imgUrl, post}) => {
+
+  const title = post.title;
+  const summary = post.content;
+  const author = post.author;
+  const date = post.date.toDate();
+  const commentsCnt = post.commentsCnt;
+
   return (
     <CardWrapper>
       <Link href={'#'}>
@@ -21,7 +22,7 @@ const Card = ({imgUrl}) => {
             <h4>{title}</h4>
             <p>{summary}</p>
             <SubInfo>
-              <span>{date}</span>
+              <span>{date.toLocaleString('ko-KR', { timeZone: 'UTC' })}</span>
               <span>{' / '}</span>
               <span>{`${commentsCnt} Comments`}</span>
             </SubInfo>

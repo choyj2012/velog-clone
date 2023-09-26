@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { Timestamp, getFirestore, query } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,7 +18,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
 export async function addPost(newPost) {
   try {
@@ -30,5 +30,23 @@ export async function addPost(newPost) {
 }
 
 export async function getPost(){
-  
+  const querySnapshot = await getDocs(collection(db, "posts"));
+  const response = [];
+  querySnapshot.forEach((doc) => {
+    response.push({_id: doc.id, ...doc.data()})
+  })
+  return response;
 }
+
+const post = {
+  title: 'title1',
+  content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis, molestias.
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis, molestias.`,
+  date: Timestamp.fromDate(new Date),
+  author: 'aajnf',
+  commentsCnt: 1,
+  comment: ['asdf'],
+  likesCnt: 2,
+}
+
+//for(let i = 0; i<5; i++) await addPost(post);
