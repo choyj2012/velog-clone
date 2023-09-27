@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { Timestamp, getFirestore, query } from "firebase/firestore";
+import { Timestamp, getDoc, getFirestore, query } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,7 +18,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, doc, addDoc, getDocs, deleteDoc } from "firebase/firestore";
 
 export async function addPost(newPost) {
   try {
@@ -29,13 +29,28 @@ export async function addPost(newPost) {
   }
 }
 
-export async function getPost(){
+export async function getAllPost(){
   const querySnapshot = await getDocs(collection(db, "posts"));
   const response = [];
   querySnapshot.forEach((doc) => {
     response.push({_id: doc.id, ...doc.data()})
   })
   return response;
+}
+
+export async function getPost(_id) {
+  const docRef = doc(db, "posts", _id);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    console.error(`ID:${_id} document not exist!`);
+  }
+}
+
+export async function deletePost(_id){
+  await deleteDoc(doc(db, "posts", _id));
 }
 
 const post = {

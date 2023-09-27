@@ -2,6 +2,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./home/Home";
 import Search from "./search/Search";
 import Write from "./write/Write";
+import Post from "./post/Post";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: '/write',
     element: <Write/>,
+  },
+  {
+    path: '/post/:_id',
+    element: <Post/>,
   }
 ])
 

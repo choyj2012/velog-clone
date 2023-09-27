@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { Link } from "react-router-dom"
 import Card from "./Card"
 import { useEffect, useState } from "react"
-import { getPost } from "../../firebase"
+import { getAllPost } from "../../firebase"
 
 export default function Home() {
 
@@ -10,7 +10,7 @@ export default function Home() {
   useEffect(() => {
     let ignore = false;
     async function get(){
-      const response = await getPost();
+      const response = await getAllPost();
       if(!ignore){
         setPosts(response);
       }

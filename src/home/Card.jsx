@@ -12,17 +12,18 @@ const Card = ({imgUrl, post}) => {
 
   return (
     <CardWrapper>
-      <Link href={'#'}>
+      <Link to={`/post/${post._id}`}>
         <CardContent>
+          {imgUrl && 
           <ImgWrapper>
             <Img src={imgUrl}>
             </Img>
-          </ImgWrapper>
+          </ImgWrapper>}
           <ContentShortCut>
             <h4>{title}</h4>
             <p>{summary}</p>
             <SubInfo>
-              <span>{date.toLocaleString('ko-KR', { timeZone: 'UTC' })}</span>
+              <span>{date.toLocaleString('ko-KR', {year: 'numeric', month: 'long', day: 'numeric'})}</span>
               <span>{' / '}</span>
               <span>{`${commentsCnt} Comments`}</span>
             </SubInfo>
@@ -70,7 +71,6 @@ const CardContent = styled.div`
 const ImgWrapper = styled.div`
   position: relative;
   padding-top: 52.19%;
-  background-color: aliceblue;
 `
 
 const Img = styled.img`
