@@ -24,7 +24,7 @@ export default function Home() {
   }, [])
   
   return (
-    <PageWrapper>
+    <>
       <Header>
         <div>
           Logo
@@ -55,7 +55,7 @@ export default function Home() {
           })}
         </FeedContents>
       </MainFeed>
-    </PageWrapper>
+    </>
   )
 }
 

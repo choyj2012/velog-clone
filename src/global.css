@@ -1,9 +1,32 @@
 html, body, #root {
   margin: 0px;
   box-sizing: border-box;
+  height: 100%;
 }
 
 a {
   text-decoration: none;
   color: inherit;
 }
+
+.w-md-editor-text-pre > code,
+.w-md-editor-text-input {
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+}
+
+
+.w-md-editor-toolbar li > button {
+  width: 3rem;
+  height: 3rem;
+}
+
+.w-md-editor-toolbar li > button > svg{
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+
+/* .w-md-editor-text {
+  padding-top: 4rem;
+} */

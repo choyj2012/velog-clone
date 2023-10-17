@@ -64,4 +64,17 @@ const post = {
   likesCnt: 2,
 }
 
+export function createPostObject(title, content, author) {
+  const p = {
+    title: title,
+    content: content,
+    date: Timestamp.fromDate(new Date()),
+    author: author,
+    commentsCnt: 0,
+    comment: [],
+    likesCnt: 0,
+  };
+  
+  return p;
+}
 //for(let i = 0; i<5; i++) await addPost(post);

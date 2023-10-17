@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import { deletePost, getPost } from "../../firebase";
+import styled from "styled-components";
 
 export default function Post() {
   const param = useParams();
@@ -23,26 +24,48 @@ export default function Post() {
     }
   }, [])
   return (
-    <div>
+    <>
       {isLoading ? (
         <Loading />
       ) : (
-        <div>
-          <button
-            onClick={() => {
-              deletePost(param._id);
-              navigate("/");
-            }}
-          >
-            delete this post
-          </button>
-          {postData.title}
-        </div>
+        <>
+          <div>
+            <button
+              onClick={() => {
+                deletePost(param._id);
+                navigate("/");
+              }}
+            >
+              delete this post
+            </button>
+          </div>
+          <PostContent postData={postData} />
+        </>
       )}
-    </div>
+    </>
   );
 }
 
+const PostContent = ({postData}) => {
+
+  return (
+    <PostWrapper>
+      <h1>{postData.title}</h1>
+      <hr/>
+      <p>{postData.content}</p>
+    </PostWrapper>
+  )
+}
+
+const PostWrapper = styled.div`
+  width: 768px;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (max-width: 768px){
+    width: 100%;
+  }
+`
 function Loading(){
   return (
     <div>
