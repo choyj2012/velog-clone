@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router"
 import { deletePost, getPost } from "../../firebase";
 import styled from "styled-components";
 
+import MDEditor from "@uiw/react-md-editor"
+
 export default function Post() {
   const param = useParams();
   const [postData, setPostData] = useState();
@@ -29,7 +31,7 @@ export default function Post() {
         <Loading />
       ) : (
         <>
-          <div>
+          {/* <div>
             <button
               onClick={() => {
                 deletePost(param._id);
@@ -38,8 +40,16 @@ export default function Post() {
             >
               delete this post
             </button>
-          </div>
-          <PostContent postData={postData} />
+          </div> */}
+          <h1>{postData.title}</h1>
+          <MDEditor
+            value={postData.content}
+            preview="preview"
+            commands={[]}
+            extraCommands={[]}
+            height={'100%'}
+          />
+          {/* <PostContent postData={postData} /> */}
         </>
       )}
     </>
