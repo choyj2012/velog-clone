@@ -2,7 +2,7 @@ import { Suspense, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import { deletePost, getPost } from "../../firebase";
 import styled from "styled-components";
-
+import Header from "../component/Header";
 import MDEditor from "@uiw/react-md-editor"
 
 export default function Post() {
@@ -27,6 +27,7 @@ export default function Post() {
   }, [])
   return (
     <>
+      <Header />
       {isLoading ? (
         <Loading />
       ) : (
@@ -41,30 +42,20 @@ export default function Post() {
               delete this post
             </button>
           </div> */}
-          <h1>{postData.title}</h1>
-          <MDEditor
-            value={postData.content}
-            preview="preview"
-            commands={[]}
-            extraCommands={[]}
-            height={'100%'}
-          />
+
+          <PostWrapper>
+            <h1>{postData.title}</h1>
+            <MDEditor
+              value={postData.content}
+              preview="preview"
+              hideToolbar={true}
+            />
+          </PostWrapper>
           {/* <PostContent postData={postData} /> */}
         </>
       )}
     </>
   );
-}
-
-const PostContent = ({postData}) => {
-
-  return (
-    <PostWrapper>
-      <h1>{postData.title}</h1>
-      <hr/>
-      <p>{postData.content}</p>
-    </PostWrapper>
-  )
 }
 
 const PostWrapper = styled.div`
