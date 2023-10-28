@@ -79,6 +79,7 @@ const Img = styled.img`
   left: 0px;
   width: 100%;
   height: 100%;
+  border-radius: 4px 4px 0px 0px;
   object-fit: cover;
 `
 

@@ -50,6 +50,7 @@ export default function Write() {
           commands.codeLive,
           commands.codePreview,
         ]}
+        visibleDragbar={false}
       />
     </div>
   );
