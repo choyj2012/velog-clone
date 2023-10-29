@@ -32,7 +32,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <PageWrapper>
+    <PageWrapper data-color-mode='light'>
       <RouterProvider router={router}/>
     </PageWrapper>
   )
