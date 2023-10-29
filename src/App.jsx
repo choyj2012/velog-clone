@@ -5,6 +5,7 @@ import Write from "./write/Write";
 import Post from "./post/Post";
 
 import styled from "styled-components";
+import TestPage from "./test/TestPage";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: '/post/:_id',
     element: <Post/>,
+  },
+  {
+    path: '/test',
+    element: <TestPage/>,
   }
 ])
 

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { Timestamp, getDoc, getFirestore, query } from "firebase/firestore";
+import { getDoc, getFirestore, orderBy } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,7 +18,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-import { collection, doc, addDoc, getDocs, deleteDoc } from "firebase/firestore";
+import { 
+  collection, doc, addDoc, getDocs, deleteDoc, Timestamp, query
+} from "firebase/firestore";
 
 export async function addPost(newPost) {
   try {
@@ -78,3 +80,43 @@ export function createPostObject(title, content, author) {
   return p;
 }
 //for(let i = 0; i<5; i++) await addPost(post);
+
+
+export async function addPosttest(newPost) {
+  try {
+    const docRef = await addDoc(collection(db, "test"), newPost);
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding post: ", e);
+  }
+}
+
+export async function getComments(postId) {
+  
+  const commentsRef = collection(db, "test", postId, "comments");
+  const q = query(commentsRef, orderBy('date'));
+  const querySnapshot = await getDocs(q);
+
+  let comments = [];
+  querySnapshot.forEach((doc) => {
+    //console.log(doc.id, " => ", doc.data());
+    comments.push({_id: doc.id, data: doc.data()})
+  });
+  console.log(comments);
+  return comments;
+}
+
+export async function addComment(postId, name, comment) {
+
+  const newComment = {
+    name: name,
+    comment: comment,
+    date: Timestamp.fromDate(new Date())
+  }
+  try {
+    const docRef = await addDoc(collection(db, "test", postId, "comments"), newComment);
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding comment: ", e);
+  }
+}
