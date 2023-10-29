@@ -1,25 +1,34 @@
 import { addComment, addPosttest, getComments } from "../../firebase";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const postId = '3tBlAMH5rDaL35HPAsmy';
 
 export default function TestPage() {
   
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState(null);
   const [name, setName] = useState('');
   const [value, setValue] = useState('');
   const fn1 = () => {
     addPosttest(post);
   }
   
-  const fn2 = async () => {
-    const comments = await getComments(postId);
-    setComments(comments);
+  useEffect(() => {
+    async function fetchComments() {
+      const comments = await getComments(postId);
+      setComments(comments);
+    }
+
+    fetchComments();
+  }, [])
+
+  const fn2 = () => {
+
   }
   
   const sendComment = async () => {
     addComment(postId, name, value);
-    fn2();
+    const comments = await getComments(postId);
+    setComments(comments);
   }
   return (
     <div>
@@ -31,13 +40,15 @@ export default function TestPage() {
       <input value={name} onChange={(e) => setName(e.target.value)}></input>
       <input value={value} onChange={(e) => setValue(e.target.value)}></input>
       <button onClick={sendComment}>Send</button>
+
+      {comments === null ? <h2>Loading...</h2> :
       <ul>
-        {
+        { 
           comments.map((item) => {
             return <li key={item._id}>{item.data.name} - {item.data.comment}</li>
           })
         }
-      </ul>
+      </ul>}
     </div>
   );
 }
