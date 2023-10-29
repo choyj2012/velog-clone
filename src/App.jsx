@@ -40,7 +40,6 @@ function App() {
 
 const PageWrapper = styled.div`
   margin: auto;
-  height: 100%;
   width: 1728px;
   margin-left: auto;
   margin-right: auto;
