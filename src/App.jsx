@@ -6,6 +6,9 @@ import Post from "./post/Post";
 
 import styled from "styled-components";
 import TestPage from "./test/TestPage";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools"
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -32,9 +35,12 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <PageWrapper data-color-mode='light'>
-      <RouterProvider router={router}/>
-    </PageWrapper>
+    <QueryClientProvider client={queryClient}>
+      <PageWrapper data-color-mode='light'>
+        <RouterProvider router={router}/>
+      </PageWrapper>
+      <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
+    </QueryClientProvider>
   )
 }
 
