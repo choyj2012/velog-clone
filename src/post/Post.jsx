@@ -17,9 +17,6 @@ export default function Post() {
   const { data: postData, isLoading: isPostLoading } = useQuery(
     ["load-post", postId],
     () => getPost(postId),
-    {
-      staleTime: 3600 * 1000,
-    }
   );
 
   const {data: comments, isLoading: isCommentsLoading } = useQuery(
