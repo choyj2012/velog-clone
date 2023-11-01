@@ -1,4 +1,4 @@
-import { addComment, addPosttest, getComments } from "../../firebase";
+import { addComment, getComments } from "../../firebase";
 import { useEffect, useState } from "react";
 
 const postId = '3tBlAMH5rDaL35HPAsmy';
@@ -8,9 +8,6 @@ export default function TestPage() {
   const [comments, setComments] = useState(null);
   const [name, setName] = useState('');
   const [value, setValue] = useState('');
-  const fn1 = () => {
-    addPosttest(post);
-  }
   
   useEffect(() => {
     async function fetchComments() {
@@ -33,8 +30,6 @@ export default function TestPage() {
   return (
     <div>
       <h1>Test Page</h1>
-
-      <button onClick={fn1}>BTN1</button>
       <button onClick={fn2}>BTN2</button>
       
       <input value={name} onChange={(e) => setName(e.target.value)}></input>

@@ -22,25 +22,16 @@ import {
   collection, doc, addDoc, getDocs, deleteDoc, Timestamp, query
 } from "firebase/firestore";
 
-export async function addPost(newPost) {
-  try {
-    const docRef = await addDoc(collection(db, "posts"), newPost);
-    console.log("Document written with ID: ", docRef.id);
-  } catch (e) {
-    console.error("Error adding post: ", e);
-  }
-}
-
 export async function getAllPost(){
+  console.log('getAllPost()');
+
   const querySnapshot = await getDocs(collection(db, "posts"));
-  const response = [];
-  querySnapshot.forEach((doc) => {
-    response.push({_id: doc.id, ...doc.data()})
-  })
-  return response;
+  return querySnapshot.docs.map((doc) => ({_id: doc.id, ...doc.data()}));
 }
 
 export async function getPost(_id) {
+  console.log('getPost()');
+
   const docRef = doc(db, "posts", _id);
   const docSnap = await getDoc(docRef);
 
@@ -51,9 +42,46 @@ export async function getPost(_id) {
   }
 }
 
+export async function addPost(newPost) {
+  console.log('addPost()');
+  try {
+    const docRef = await addDoc(collection(db, "posts"), newPost);
+    //console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding post: ", e);
+  }
+}
+
 export async function deletePost(_id){
+  console.log('deletePost()');
   await deleteDoc(doc(db, "posts", _id));
 }
+
+export async function getComments(postId) {
+  console.log('getComments()');
+  const commentsRef = collection(db, "test", postId, "comments");
+  const q = query(commentsRef, orderBy('date'));
+  const querySnapshot = await getDocs(q);
+
+  return querySnapshot.docs.map((doc) => ({_id: doc.id, ...doc.data()}));
+}
+
+export async function addComment({postId, name, comment}) {
+  console.log('addComment()');
+  const newComment = {
+    name: name,
+    comment: comment,
+    date: Timestamp.fromDate(new Date())
+  }
+  try {
+    const docRef = await addDoc(collection(db, "test", postId, "comments"), newComment);
+    //console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding comment: ", e);
+  }
+}
+
+// -------------------------------------- //
 
 const post = {
   title: 'title1',
@@ -78,45 +106,4 @@ export function createPostObject(title, content, author) {
   };
   
   return p;
-}
-//for(let i = 0; i<5; i++) await addPost(post);
-
-
-export async function addPosttest(newPost) {
-  try {
-    const docRef = await addDoc(collection(db, "test"), newPost);
-    console.log("Document written with ID: ", docRef.id);
-  } catch (e) {
-    console.error("Error adding post: ", e);
-  }
-}
-
-export async function getComments(postId) {
-  
-  const commentsRef = collection(db, "test", postId, "comments");
-  const q = query(commentsRef, orderBy('date'));
-  const querySnapshot = await getDocs(q);
-
-  let comments = [];
-  querySnapshot.forEach((doc) => {
-    //console.log(doc.id, " => ", doc.data());
-    comments.push({_id: doc.id, data: doc.data()})
-  });
-  console.log(comments);
-  return comments;
-}
-
-export async function addComment(postId, name, comment) {
-
-  const newComment = {
-    name: name,
-    comment: comment,
-    date: Timestamp.fromDate(new Date())
-  }
-  try {
-    const docRef = await addDoc(collection(db, "test", postId, "comments"), newComment);
-    console.log("Document written with ID: ", docRef.id);
-  } catch (e) {
-    console.error("Error adding comment: ", e);
-  }
 }

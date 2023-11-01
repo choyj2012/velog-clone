@@ -4,25 +4,19 @@ import Card from "./Card"
 import Header from "../component/Header"
 import { useEffect, useState } from "react"
 import { getAllPost } from "../../firebase"
+import { useQuery } from "react-query"
 
 export default function Home() {
 
-  const [posts, setPosts] = useState(new Array());
-  useEffect(() => {
-    let ignore = false;
-    async function get(){
-      const response = await getAllPost();
-      if(!ignore){
-        setPosts(response);
-      }
-    }
+ // const [posts, setPosts] = useState(new Array());
 
-    get();
-
-    return () => {
-      ignore = true;
+  const {data: posts, isLoading: isPostsLoading } = useQuery(
+    ["load-posts"],
+    () => getAllPost(),
+    {
+      refetchOnWindowFocus: false,
     }
-  }, [])
+  )
   
   return (
     <>
@@ -34,15 +28,25 @@ export default function Home() {
             <Link>최신</Link>
           </div>
         </FeedHeader>
-        <FeedContents>
-          {/* {Array(5).fill().map((v, i) => <Card key={i} imgUrl={'https://placehold.co/600x400'}/>)} */}
-          {posts.map((v) => {
-            return <Card key={v._id} imgUrl={'https://placehold.co/600x400'} post={v}/>
-          })}
-        </FeedContents>
+
+        {isPostsLoading ? (
+          <h2>Loading...</h2>
+        ) : (
+          <FeedContents>
+            {posts.map((v) => {
+              return (
+                <Card
+                  key={v._id}
+                  imgUrl={"https://placehold.co/600x400"}
+                  post={v}
+                />
+              );
+            })}
+          </FeedContents>
+        )}
       </MainFeed>
     </>
-  )
+  );
 }
 
 

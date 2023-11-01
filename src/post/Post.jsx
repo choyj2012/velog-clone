@@ -1,55 +1,62 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router"
-import { getPost } from "../../firebase";
+import { getPost, deletePost, getComments, addComment } from "../../firebase";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../component/Header";
 import MDEditor from "@uiw/react-md-editor"
+import { QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient } from "react-query";
 
 export default function Post() {
   const param = useParams();
-  const [postData, setPostData] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [comments, setComments] = useState([]);
+  const postId = param._id;
+  const queryClient = useQueryClient();
   const [comment, setComment] = useState('');
 
-  useEffect(() => {
-    let ignore = false;
-    async function fetchData() {
-      const response = await getPost(param._id);
-      if(!ignore){
-        setPostData(response)
-        setIsLoading(false);
-      }
-    }
+  const navigate = useNavigate();
+  const { data: postData, isLoading: isPostLoading } = useQuery(
+    ["load-post", postId],
+    () => getPost(postId),
+  );
 
-    fetchData();
-    return () => {
-      ignore = true;
-    }
-  }, [])
+  const {data: comments, isLoading: isCommentsLoading } = useQuery(
+    ["load-comments", postId],
+    () => getComments(postId),
+  )
 
   const handleTextAreaHeight = (e) => {
     setComment(e.target.value);
     e.target.style.height = '0px';
     e.target.style.height = e.target.scrollHeight + 'px';
   }
+
+  const handleAddComment = async () => {
+    mutate({postId: postId, name: 'name', comment: comment});
+    setComment('');
+  }
+
+  const {mutate} = useMutation(addComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('load-comments');
+    }
+  });
   return (
     <>
       <Header />
-      {isLoading ? (
+      {isPostLoading ? (
         <Loading />
       ) : (
         <>
-          {/* <div>
+          <div>
             <button
               onClick={() => {
-                deletePost(param._id);
+                deletePost(postId);
                 navigate("/");
               }}
             >
               delete this post
             </button>
-          </div> */}
+          </div>
 
           <PostWrapper>
             <h1>{postData.title}</h1>
@@ -58,21 +65,59 @@ export default function Post() {
               preview="preview"
               hideToolbar={true}
               visibleDragbar={false}
-              height={'auto'}
+              height={"auto"}
             />
+
+            <div
+              style={{
+                height: "3px",
+                backgroundColor: "black",
+                marginBottom: "1rem",
+                marginTop: "6rem",
+              }}
+            ></div>
+
             <CommentWrapper>
-              <h2>{postData.commentsCnt} Comments</h2>
-              <CommentTextArea onChange={handleTextAreaHeight} value={comment}/>
-              <AddCommentBtn>댓글 작성</AddCommentBtn>
-              
-              <div style={{
-                height: '3px', backgroundColor: 'black', 
-                marginBottom: '1rem', marginTop: '1rem'}}></div>
-              <div>
-                {postData.comment.map((com) => {
-                  return <div>- {com}</div>;
-                })}
-              </div>
+              {isCommentsLoading ? (
+                <h2>Loading...</h2>
+              ) : (
+                <>
+                  <h2>{comments.length} Comments</h2>
+                  <CommentTextArea
+                    onChange={handleTextAreaHeight}
+                    value={comment}
+                  />
+                  <AddCommentBtn onClick={handleAddComment}>
+                    댓글 작성
+                  </AddCommentBtn>
+
+                  <div>
+                    <ul>
+                      {comments.map((item) => {
+                        return (
+                          <li key={item._id}>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <p>
+                                {item.name} - {item.comment}
+                              </p>
+                              <p>
+                                {new Date(
+                                  item.date.seconds * 1000
+                                ).toLocaleString("ko-KR")}
+                              </p>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </>
+              )}
             </CommentWrapper>
           </PostWrapper>
         </>
@@ -94,7 +139,7 @@ const PostWrapper = styled.div`
 const CommentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 5rem;
+  margin-top: 1rem;
 `
 const CommentTextArea = styled.textarea`
   resize: none;
@@ -110,7 +155,7 @@ const AddCommentBtn = styled.button`
   width: 100px;
   margin-top: 1rem;
   padding: 5px;
-`
+`;
 
 function Loading(){
   return (
