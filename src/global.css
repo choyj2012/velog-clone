@@ -29,6 +29,11 @@ a {
 .w-md-editor-preview {
   position: static
 }
+
+.w-md-editor-content {
+  display: flex;
+  flex-direction: row;
+}
 /* .w-md-editor-text {
   padding-top: 4rem;
 } */
