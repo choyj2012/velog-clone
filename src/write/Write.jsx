@@ -3,7 +3,7 @@ import MDEditor, {commands} from "@uiw/react-md-editor";
 import { addPost, createPostObject } from "../../firebase";
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom'
-
+import Header from "../component/Header";
 const mkdStr = `
 # title
 ![image](https://nextjs.org/_next/image?url=%2Fdocs%2Fdark%2Fserver-rendering-with-streaming.png&w=1920&q=75&dpl=dpl_k9JgN7S2Z3LfqB6skeTLi9zU4W6G)
@@ -23,36 +23,39 @@ export default function Write() {
     navigate('/');
   }
   return (
-    <div
-      data-color-mode="auto"
-      style={{ height: "100%", overflow: "hidden" }}
-    >
-      <ControlBox>
-        <TitleBox
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            console.log(e.target.value);
-          }}
-        />
-        <div>
-          <ControlBtn onClick={goBack}>{`나가기`}</ControlBtn>
-          <ControlBtn onClick={upload}>{`저장`}</ControlBtn>
-        </div>
-      </ControlBox>
+    <>
+      <Header />
+      <div
+        data-color-mode="auto"
+        style={{ height: "100%", overflow: "hidden" }}
+      >
+        <ControlBox>
+          <TitleBox
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              console.log(e.target.value);
+            }}
+          />
+          <div>
+            <ControlBtn onClick={goBack}>{`나가기`}</ControlBtn>
+            <ControlBtn onClick={upload}>{`저장`}</ControlBtn>
+          </div>
+        </ControlBox>
 
-      <MDEditor
-        value={value}
-        onChange={setValue}
-        height={"90%"}
-        extraCommands={[
-          commands.codeEdit,
-          commands.codeLive,
-          commands.codePreview,
-        ]}
-        visibleDragbar={false}
-      />
-    </div>
+        <MDEditor
+          value={value}
+          onChange={setValue}
+          height={"90%"}
+          extraCommands={[
+            commands.codeEdit,
+            commands.codeLive,
+            commands.codePreview,
+          ]}
+          visibleDragbar={false}
+        />
+      </div>
+    </>
   );
 }
 
