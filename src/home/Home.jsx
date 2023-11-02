@@ -2,22 +2,12 @@ import styled from "styled-components"
 import { Link } from "react-router-dom"
 import Card from "./Card"
 import Header from "../component/Header"
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { getAllPost } from "../../firebase"
 import { useQuery } from "react-query"
 
 export default function Home() {
 
- // const [posts, setPosts] = useState(new Array());
-
-  const {data: posts, isLoading: isPostsLoading } = useQuery(
-    ["load-posts"],
-    () => getAllPost(),
-    {
-      refetchOnWindowFocus: false,
-    }
-  )
-  
   return (
     <>
       <Header />
@@ -29,26 +19,35 @@ export default function Home() {
           </div>
         </FeedHeader>
 
-        {isPostsLoading ? (
-          <h2>Loading...</h2>
-        ) : (
-          <FeedContents>
-            {posts.map((v) => {
-              return (
-                <Card
-                  key={v._id}
-                  imgUrl={"https://placehold.co/600x400"}
-                  post={v}
-                />
-              );
-            })}
-          </FeedContents>
-        )}
+        <Suspense fallback={<h2>Loading...</h2>}>
+          <Feed />
+        </Suspense>
       </MainFeed>
     </>
   );
 }
 
+const Feed = () => {
+
+  const {data: posts, isLoading: isPostsLoading } = useQuery(
+    ["load-posts"],
+    () => getAllPost(),
+    {
+      refetchOnWindowFocus: false,
+      suspense: true,
+    }
+  )
+
+  return (
+    <FeedContents>
+      {posts?.map((v) => {
+        return (
+          <Card key={v._id} imgUrl={"https://placehold.co/600x400"} post={v} />
+        );
+      })}
+    </FeedContents>
+  );
+}
 
 
 const MainFeed = styled.div`
