@@ -1,7 +1,6 @@
 html, body, #root {
   margin: 0px;
   box-sizing: border-box;
-  height: 100%;
 }
 
 a {
@@ -26,6 +25,9 @@ a {
   height: 1.2rem;
 }
 
+.w-md-editor{ 
+  padding-bottom: 0px;
+}
 .w-md-editor-preview {
   position: static
 }

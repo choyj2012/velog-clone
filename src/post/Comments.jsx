@@ -38,29 +38,22 @@ const Comments = ({postId}) => {
       <CommentTextArea onChange={handleTextAreaHeight} value={comment} />
       <AddCommentBtn onClick={handleAddComment}>댓글 작성</AddCommentBtn>
 
-      <div>
-        <ul>
-          {comments.map((item) => {
-            return (
-              <li key={item._id}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <p>
-                    {item.name} - {item.comment}
-                  </p>
-                  <p>
-                    {new Date(item.date.seconds * 1000).toLocaleString("ko-KR")}
-                  </p>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      {comments.map((item) => {
+        return (
+          <div
+            key={item._id}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <p>
+              {item.name} - {item.comment}
+            </p>
+            <p>{new Date(item.date.seconds * 1000).toLocaleString("ko-KR")}</p>
+          </div>
+        );
+      })}
     </CommentWrapper>
   );
 }

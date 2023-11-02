@@ -24,10 +24,9 @@ export default function Write() {
   }
   return (
     <>
-      <Header />
       <div
         data-color-mode="auto"
-        style={{ height: "100%", overflow: "hidden" }}
+        style={{ height: "100vh" }}
       >
         <ControlBox>
           <TitleBox
