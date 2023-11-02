@@ -36,7 +36,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <PageWrapper data-color-mode='light'>
+      <PageWrapper>
         <RouterProvider router={router}/>
       </PageWrapper>
       <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
