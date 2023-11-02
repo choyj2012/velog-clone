@@ -53,8 +53,8 @@ const PostContent = ({postId}) => {
   return (
     <>
       <button
-        onClick={() => {
-          deletePost(postId);
+        onClick={async () => {
+          await deletePost(postId);
           navigate("/");
         }}
       >

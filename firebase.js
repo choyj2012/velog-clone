@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDoc, getFirestore, orderBy } from "firebase/firestore";
+import { getDoc, getFirestore, increment, orderBy, updateDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -59,7 +59,7 @@ export async function deletePost(_id){
 
 export async function getComments(postId) {
   console.log('getComments()');
-  const commentsRef = collection(db, "test", postId, "comments");
+  const commentsRef = collection(db, "posts", postId, "comments");
   const q = query(commentsRef, orderBy('date'));
   const querySnapshot = await getDocs(q);
 
@@ -74,7 +74,10 @@ export async function addComment({postId, name, comment}) {
     date: Timestamp.fromDate(new Date())
   }
   try {
-    const docRef = await addDoc(collection(db, "test", postId, "comments"), newComment);
+    const docRef = await addDoc(collection(db, "posts", postId, "comments"), newComment);
+    await updateDoc(doc(db, "posts", postId), {
+      commentsCnt: increment(1)
+    })
     //console.log("Document written with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding comment: ", e);
@@ -89,8 +92,7 @@ const post = {
   Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis, molestias.`,
   date: Timestamp.fromDate(new Date),
   author: 'aajnf',
-  commentsCnt: 1,
-  comment: ['asdf'],
+  commentsCnt: 0,
   likesCnt: 2,
 }
 
