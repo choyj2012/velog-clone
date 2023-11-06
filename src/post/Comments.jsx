@@ -71,6 +71,8 @@ const CommentTextArea = styled.textarea`
   line-height: 1.75;
   border-radius: 4px;
   padding: 1rem;
+  background-color: var(--background3);
+  color: var(--text);
 `
 
 const AddCommentBtn = styled.button`

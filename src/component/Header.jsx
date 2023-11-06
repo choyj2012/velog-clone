@@ -1,10 +1,20 @@
 import styled from "styled-components"
+import { useState } from "react"
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
+import DarkmodeSvg from '../assets/dark-mode.svg?react';
+import LightmodeSvg from '../assets/light-mode.svg?react';
+import SearchSvg from '../assets/search-icon.svg?react';
+import { useEffect } from "react";
+
 
 export default function Header() {
 
   const navigate = useNavigate();
+  const [isDark, setIsDark] = useState(false);
+  useEffect(() => {
+    setIsDark(document.documentElement.getAttribute('data-color-mode') === 'dark');
+  }, []);
   return (
     <HeaderBox>
       <Logo
@@ -15,14 +25,26 @@ export default function Header() {
         MyBlog
       </Logo>
       <ControlBox>
-        <SVGBtn>
-          <img src="src\assets\dark-mode.svg" alt="" />
-        </SVGBtn>
+        <SvgBtn onClick={() => {
+          setIsDark(p => !p);
+          if(isDark){
+            document.documentElement.setAttribute('data-color-mode', 'light');
+            localStorage.setItem('color-scheme', 'light');
+          } else {
+            document.documentElement.setAttribute('data-color-mode', 'dark');
+            localStorage.setItem('color-scheme', 'dark');
+          }
+        }}>
+          {isDark ? 
+            <LightmodeSvg /> :
+            <DarkmodeSvg />
+          }
+        </SvgBtn>
 
         <Link to={"/search"}>
-          <SVGBtn>
-            <img src="src\assets\search-icon.svg" alt=""></img>
-          </SVGBtn>
+          <SvgBtn>
+            <SearchSvg fill={isDark ? '#FFF' : '#000'}/>
+          </SvgBtn>
         </Link>
 
         <Link to={"/write"}>새 글 작성</Link>
@@ -45,7 +67,7 @@ const ControlBox = styled.div`
   gap: 8px;
 `
 
-const SVGBtn = styled.div`
+const SvgBtn = styled.div`
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
@@ -53,13 +75,17 @@ const SVGBtn = styled.div`
   justify-content: center;
   align-items: center;
 
-  & > img {
+  & > * {
     width: 24px;
     height: 24px;
   }
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
   }
+`
+const SvgToggleBtn = styled.div`
+  ${SvgBtn};
+
 `
 const HeaderBox = styled.div`
   display: flex;

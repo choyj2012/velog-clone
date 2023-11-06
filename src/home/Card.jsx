@@ -45,7 +45,7 @@ const Card = ({imgUrl, post}) => {
 const CardWrapper = styled.div`
   width: 20rem;
   margin: 1rem;
-
+  background-color: var(--background1);
   @media (max-width: 1056px){
     width: calc(50% - 2rem);
   }

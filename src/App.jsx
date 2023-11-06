@@ -8,6 +8,8 @@ import styled from "styled-components";
 import TestPage from "./test/TestPage";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools"
+import GlobalStyle from "./globalStyle";
+import { useEffect } from "react";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
@@ -33,9 +35,29 @@ const router = createBrowserRouter([
   }
 ])
 
+const isUserColorScheme = localStorage.getItem('color-scheme');
+const isOsColorScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const getColorScheme = () => (isUserColorScheme ? isUserColorScheme : isOsColorScheme);
+
+const useColorScheme = () => {
+  useEffect(() => {
+    console.log(isUserColorScheme, isOsColorScheme, getColorScheme());
+    if (getColorScheme() === "dark") {
+      localStorage.setItem("color-scheme", "dark");
+      document.documentElement.setAttribute("data-color-mode", "dark");
+    } else {
+      localStorage.setItem("color-scheme", "light");
+      document.documentElement.setAttribute("data-color-mode", "light");
+    }
+  }, []);
+}
 function App() {
+
+  useColorScheme();
+
   return (
     <QueryClientProvider client={queryClient}>
+      <GlobalStyle />
       <PageWrapper>
         <RouterProvider router={router}/>
       </PageWrapper>
