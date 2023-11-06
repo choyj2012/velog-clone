@@ -45,7 +45,6 @@ const Card = ({imgUrl, post}) => {
 const CardWrapper = styled.div`
   width: 20rem;
   margin: 1rem;
-  background-color: var(--background1);
   @media (max-width: 1056px){
     width: calc(50% - 2rem);
   }
@@ -59,7 +58,7 @@ const CardContent = styled.div`
   border-radius: 4px;
   display: flex;
   flex-direction: column;
-  
+  background-color: var(--background2);
   box-shadow: rgba(0, 0, 0, 0.04) 0px 4px 16px 0px;
   transition: box-shadow 0.25s ease-in 0s, transform 0.25s ease-in 0s;
   &:hover {

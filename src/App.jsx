@@ -9,7 +9,7 @@ import TestPage from "./test/TestPage";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools"
 import GlobalStyle from "./globalStyle";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
@@ -40,7 +40,7 @@ const isOsColorScheme = window.matchMedia('(prefers-color-scheme: dark)').matche
 const getColorScheme = () => (isUserColorScheme ? isUserColorScheme : isOsColorScheme);
 
 const useColorScheme = () => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     console.log(isUserColorScheme, isOsColorScheme, getColorScheme());
     if (getColorScheme() === "dark") {
       localStorage.setItem("color-scheme", "dark");

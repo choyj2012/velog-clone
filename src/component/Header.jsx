@@ -47,7 +47,10 @@ export default function Header() {
           </SvgBtn>
         </Link>
 
-        <Link to={"/write"}>새 글 작성</Link>
+        <WriteBtn>
+          <Link to={"/write"}>새 글 작성</Link>
+        </WriteBtn>
+
       </ControlBox>
     </HeaderBox>
   );
@@ -80,13 +83,22 @@ const SvgBtn = styled.div`
     height: 24px;
   }
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: var(--hover-layer);
   }
 `
-const SvgToggleBtn = styled.div`
-  ${SvgBtn};
+const WriteBtn = styled.div`
+  background-color: var(--background0);
+  border: 1px solid var(--text);
+  border-radius: 15px;
+  font-size: 1.25rem;
+  padding: 10px;
 
+  &:hover {
+    background-color: var(--text);
+    color: var(--background0);
+  }
 `
+
 const HeaderBox = styled.div`
   display: flex;
   flex-direction: row;

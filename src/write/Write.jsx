@@ -63,18 +63,18 @@ const ControlBox = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: black;
+  background-color: var(--background0);
 `
 const TitleBox = styled.input`
   border: none;
-  background-color: black;
+  background-color: var(--background0);
   width: 50%;
   margin-left: 10px;
   margin-right: 10px;
   font-size: 2.75rem;
   outline: none;
-  caret-color: white;
-  color: white;
+  caret-color: var(--text);
+  color: var(--text);
 `
 
 const ControlBtn = styled.span`
@@ -83,9 +83,9 @@ const ControlBtn = styled.span`
   border-radius: 10%;
   margin-right: 10px;
   height: fit-content;
-  color: white;
+  color: var(--text);
   
   &:hover {
-    background-color: #373737;
+    background-color: var(--hover-layer);
   }
 `
