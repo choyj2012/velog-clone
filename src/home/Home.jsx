@@ -7,6 +7,7 @@ import { getAllPost, getAllPostbyParam } from "../../firebase"
 import { useInfiniteQuery, useQuery } from "react-query"
 import { useInView } from "react-intersection-observer"
 import { Fragment } from "react"
+import FeedController from "./FeedController"
 
 export default function Home() {
 
@@ -15,10 +16,7 @@ export default function Home() {
       <Header />
       <MainFeed>
         <FeedHeader>
-          <div>
-            <Link>트렌딩</Link>
-            <Link>최신</Link>
-          </div>
+          <FeedController/>
         </FeedHeader>
 
         <Suspense fallback={<h2>Loading...</h2>}>
@@ -56,6 +54,7 @@ const Feed = () => {
       },
       suspense: true,
       refetchOnWindowFocus: false,
+      staleTime: 1000*20,
     }
   );
 
@@ -78,7 +77,7 @@ const Feed = () => {
             return (
               <Card
                 key={postData.id}
-                imgUrl={"https://placehold.co/600x400"}
+                imgUrl={"https://picsum.photos/id/28/600/400"}
                 postId={postData.id}
                 post={postData.data()}
               />
@@ -111,7 +110,7 @@ const FeedContents = styled.div`
   display: flex;
   flex-flow: row wrap;
   margin: -1rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
 `
 
 const Observer = styled.div`
