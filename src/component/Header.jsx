@@ -25,32 +25,30 @@ export default function Header() {
         MyBlog
       </Logo>
       <ControlBox>
-        <SvgBtn onClick={() => {
-          setIsDark(p => !p);
-          if(isDark){
-            document.documentElement.setAttribute('data-color-mode', 'light');
-            localStorage.setItem('color-scheme', 'light');
-          } else {
-            document.documentElement.setAttribute('data-color-mode', 'dark');
-            localStorage.setItem('color-scheme', 'dark');
-          }
-        }}>
-          {isDark ? 
-            <LightmodeSvg /> :
-            <DarkmodeSvg />
-          }
+        <SvgBtn
+          onClick={() => {
+            setIsDark((p) => !p);
+            if (isDark) {
+              document.documentElement.setAttribute("data-color-mode", "light");
+              localStorage.setItem("color-scheme", "light");
+            } else {
+              document.documentElement.setAttribute("data-color-mode", "dark");
+              localStorage.setItem("color-scheme", "dark");
+            }
+          }}
+        >
+          {isDark ? <LightmodeSvg /> : <DarkmodeSvg />}
         </SvgBtn>
 
         <Link to={"/search"}>
           <SvgBtn>
-            <SearchSvg fill={isDark ? '#FFF' : '#000'}/>
+            <SearchSvg fill={isDark ? "#FFF" : "#000"} />
           </SvgBtn>
         </Link>
 
-        <WriteBtn>
-          <Link to={"/write"}>새 글 작성</Link>
-        </WriteBtn>
-
+        <Link to={"/write"}>
+          <WriteBtn>새 글 작성</WriteBtn>
+        </Link>
       </ControlBox>
     </HeaderBox>
   );
