@@ -25,7 +25,9 @@ import {
 export async function getAllPost(){
   console.log('getAllPost()');
 
-  const querySnapshot = await getDocs(collection(db, "posts"));
+  const postsRef = collection(db, "posts");
+  const q = query(postsRef, orderBy('date', 'desc'));
+  const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map((doc) => ({_id: doc.id, ...doc.data()}));
 }
 
