@@ -32,7 +32,7 @@ export async function getAllPost(){
 }
 
 export async function getAllPostbyParam({pageParam}){
-  console.log(`getAllPost()`);
+  console.log('getAllPostbyParam()')
   const postsRef = collection(db, "posts");
 
   const q = pageParam
