@@ -3,8 +3,10 @@ import { Link } from "react-router-dom"
 import Card from "./Card"
 import Header from "../component/Header"
 import { Suspense, useEffect, useState } from "react"
-import { getAllPost } from "../../firebase"
-import { useQuery } from "react-query"
+import { getAllPost, getAllPostbyParam } from "../../firebase"
+import { useInfiniteQuery, useQuery } from "react-query"
+import { useInView } from "react-intersection-observer"
+import { Fragment } from "react"
 
 export default function Home() {
 
@@ -29,23 +31,69 @@ export default function Home() {
 
 const Feed = () => {
 
-  const {data: posts, isLoading: isPostsLoading } = useQuery(
+  const {ref, inView} = useInView();
+  // const {data: posts, isLoading: isPostsLoading } = useQuery(
+  //   ["load-posts"],
+  //   () => getAllPost(),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     suspense: true,
+  //   }
+  // )
+
+  const {
+    data: posts,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery(
     ["load-posts"],
-    () => getAllPost(),
+    async ({ pageParam }) => getAllPostbyParam({ pageParam }),
     {
-      refetchOnWindowFocus: false,
+      getNextPageParam: (querySnapshot) => {
+        if (querySnapshot.size < 20) return undefined;
+        else return querySnapshot.docs[querySnapshot.docs.length - 1];
+      },
       suspense: true,
+      refetchOnWindowFocus: false,
     }
-  )
+  );
+
+  
+  useEffect(() => {
+    if(inView) fetchNextPage()
+  },[fetchNextPage, inView]);
 
   return (
-    <FeedContents>
-      {posts?.map((v) => {
+    <Fragment>
+      <FeedContents>
+        {/* {posts?.map((v) => {
         return (
           <Card key={v._id} imgUrl={"https://placehold.co/600x400"} post={v} />
         );
-      })}
-    </FeedContents>
+      })} */}
+
+        {posts.pages.map((querySnapshot) => {
+          return querySnapshot.docs.map((postData) => {
+            return (
+              <Card
+                key={postData.id}
+                imgUrl={"https://placehold.co/600x400"}
+                postId={postData.id}
+                post={postData.data()}
+              />
+            );
+          });
+        })}
+        <Observer ref={ref}>
+          {/* {isFetchingNextPage
+            ? "Loading more..."
+            : hasNextPage
+            ? "Load Newer"
+            : "Nothing more to load"} */}
+        </Observer>
+      </FeedContents>
+    </Fragment>
   );
 }
 
@@ -59,8 +107,19 @@ const FeedHeader = styled.div`
 `
 
 const FeedContents = styled.div`
+  position: relative;
   display: flex;
   flex-flow: row wrap;
   margin: -1rem;
   margin-top: 2rem;
+`
+
+const Observer = styled.div`
+  position: absolute;
+  bottom: 30rem;
+  left: 50%;
+  visibility: hidden;
+  border: 1px solid black;
+  width: 10px;
+  height: 10px;
 `

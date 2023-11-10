@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { Link } from "react-router-dom"
 import { Timestamp } from "firebase/firestore";
 
-const Card = ({imgUrl, post}) => {
+const Card = ({imgUrl, postId, post}) => {
 
   const title = post.title;
   const summary = post.content;
@@ -12,7 +12,7 @@ const Card = ({imgUrl, post}) => {
 
   return (
     <CardWrapper>
-      <Link to={`/post/${post._id}`}>
+      <Link to={`/post/${postId}`}>
         <CardContent>
           {imgUrl && 
           <ImgWrapper>

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDoc, getFirestore, increment, orderBy, updateDoc } from "firebase/firestore";
+import { getDoc, getFirestore, increment, limit, orderBy, startAfter, updateDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -28,6 +28,20 @@ export async function getAllPost(){
   const postsRef = collection(db, "posts");
   const q = query(postsRef, orderBy('date', 'desc'));
   const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map((doc) => ({_id: doc.id, ...doc.data()}));
+}
+
+export async function getAllPostbyParam({pageParam}){
+  console.log(`getAllPost()`);
+  const postsRef = collection(db, "posts");
+
+  const q = pageParam
+    ? query(postsRef, orderBy('date', 'desc'), startAfter(pageParam), limit(20))
+    : query(postsRef, orderBy("date", "desc"), limit(20));
+
+  const querySnapshot = await getDocs(q);
+  // querySnapshot.docs.forEach((doc) => console.log(doc.data()));
+  return querySnapshot;
   return querySnapshot.docs.map((doc) => ({_id: doc.id, ...doc.data()}));
 }
 
