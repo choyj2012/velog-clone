@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools"
 import GlobalStyle from "./globalStyle";
 import { useEffect, useLayoutEffect } from "react";
+import AuthContext from "./context/AuthContext";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
@@ -59,7 +60,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <GlobalStyle />
       <PageWrapper>
-        <RouterProvider router={router}/>
+        <AuthContext>
+          <RouterProvider router={router}/>
+        </AuthContext>
       </PageWrapper>
       <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
     </QueryClientProvider>
