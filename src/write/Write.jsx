@@ -3,7 +3,9 @@ import MDEditor, {commands} from "@uiw/react-md-editor";
 import { addPost, createPostObject } from "../../firebase";
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom'
-import Header from "../component/Header";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+
 const mkdStr = `
 # title
 ![image](https://nextjs.org/_next/image?url=%2Fdocs%2Fdark%2Fserver-rendering-with-streaming.png&w=1920&q=75&dpl=dpl_k9JgN7S2Z3LfqB6skeTLi9zU4W6G)
@@ -12,9 +14,10 @@ export default function Write() {
   const [title, setTitle] = useState("untitled");
   const [value, setValue] = useState(mkdStr);
   const navigate = useNavigate();
+  const {isLoggedIn, user} = useContext(AuthContext);
 
   const upload = () => {
-    const newPost = new createPostObject(title, value, 'Eense');
+    const newPost = new createPostObject(title, value, user.displayName);
     addPost(newPost);
     navigate('/');
   }
@@ -33,7 +36,6 @@ export default function Write() {
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
-              console.log(e.target.value);
             }}
           />
           <div>
