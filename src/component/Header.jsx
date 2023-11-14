@@ -8,13 +8,26 @@ import SearchSvg from '../assets/search-icon.svg?react';
 import { useEffect } from "react";
 
 
+import { getCurrentUser, signInWithGoogle, signOutWithGoogle } from "../../auth";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+
 export default function Header() {
 
   const navigate = useNavigate();
   const [isDark, setIsDark] = useState(false);
+  const { isLoggedIn, user } = useContext(AuthContext);
+
   useEffect(() => {
     setIsDark(document.documentElement.getAttribute('data-color-mode') === 'dark');
   }, []);
+
+  const handleLogin = () => {
+    signInWithGoogle();
+  }
+  const handleLogout = () => {
+    signOutWithGoogle();
+  }
   return (
     <HeaderBox>
       <Logo
@@ -46,9 +59,27 @@ export default function Header() {
           </SvgBtn>
         </Link>
 
-        <Link to={"/write"}>
-          <WriteBtn>새 글 작성</WriteBtn>
-        </Link>
+        {isLoggedIn ? (
+          <>
+            <Link to={"/write"}>
+              <HeaderBtn>새 글 작성</HeaderBtn>
+            </Link>
+
+            <ProfileImg $imgURL={user.photoURL} />
+            <HeaderBtn
+              onClick={() => {
+                console.log(getCurrentUser());
+              }}
+            >
+              MyPage
+            </HeaderBtn>
+            <HeaderBtn onClick={handleLogout}>로그아웃</HeaderBtn>
+          </>
+        ) : (
+          <>
+            <HeaderBtn onClick={handleLogin}>로그인</HeaderBtn>
+          </>
+        )}
       </ControlBox>
     </HeaderBox>
   );
@@ -84,7 +115,7 @@ const SvgBtn = styled.div`
     background-color: var(--hover-layer);
   }
 `
-const WriteBtn = styled.div`
+const HeaderBtn = styled.div`
   background-color: var(--background0);
   border: 1px solid var(--text);
   border-radius: 15px;
@@ -95,6 +126,15 @@ const WriteBtn = styled.div`
     background-color: var(--text);
     color: var(--background0);
   }
+`
+
+const ProfileImg = styled.div`
+  cursor: pointer;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-size: 100%;
+  background-image: ${(props) => `url(${props.$imgURL})`};
 `
 
 const HeaderBox = styled.div`
