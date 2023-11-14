@@ -16,6 +16,11 @@ export default function Write() {
   const navigate = useNavigate();
   const {isLoggedIn, user} = useContext(AuthContext);
 
+  //로그인 상태인지 확인
+  useEffect(() => {
+    if(!isLoggedIn) navigate('/');
+  }, [])
+
   const upload = () => {
     const newPost = new createPostObject(title, value, user.displayName);
     addPost(newPost);
