@@ -13,6 +13,8 @@ const Comments = ({postId}) => {
     () => getComments(postId),
     {
       suspense: true,
+      refetchOnWindowFocus: false,
+      staleTime: 1000*20,
     }
   )
 

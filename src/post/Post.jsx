@@ -47,6 +47,8 @@ const PostContent = ({postId}) => {
     () => getPost(postId),
     {
       suspense: true,
+      refetchOnWindowFocus: false,
+      staleTime: 1000*20,
     }
   );
 
