@@ -14,11 +14,11 @@ const Card = ({imgUrl, postId, post}) => {
     <CardWrapper>
       <Link to={`/post/${postId}`}>
         <CardContent>
-          {imgUrl && 
+          {/* {imgUrl && 
           <ImgWrapper>
             <Img src={imgUrl}>
             </Img>
-          </ImgWrapper>}
+          </ImgWrapper>} */}
           <ContentShortCut>
             <h4>{title}</h4>
             <p>{summary}</p>
@@ -90,8 +90,9 @@ const ContentShortCut = styled.div`
 
   /* title */
   & > h4 {
-    font-size: 1rem;
-    margin: 0px 0px 0.25rem;
+    font-size: 1.5rem;
+    margin: 0px 0px 0.75rem;
+    text-overflow: ellipsis;
   }
 
   & > p {

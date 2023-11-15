@@ -35,7 +35,7 @@ export default function Header() {
           navigate("/");
         }}
       >
-        MyBlog
+        PostIt
       </Logo>
       <ControlBox>
         <SvgBtn
