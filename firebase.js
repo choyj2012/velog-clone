@@ -31,13 +31,13 @@ export async function getAllPost(){
   return querySnapshot.docs.map((doc) => ({_id: doc.id, ...doc.data()}));
 }
 
-export async function getAllPostbyParam({pageParam}){
+export async function getAllPostbyParam({pageParam, sortBy}){
   console.log('getAllPostbyParam()')
   const postsRef = collection(db, "posts");
 
   const q = pageParam
-    ? query(postsRef, orderBy('date', 'desc'), startAfter(pageParam), limit(20))
-    : query(postsRef, orderBy("date", "desc"), limit(20));
+    ? query(postsRef, orderBy(sortBy, 'desc'), startAfter(pageParam), limit(20))
+    : query(postsRef, orderBy(sortBy, "desc"), limit(20));
 
   const querySnapshot = await getDocs(q);
   // querySnapshot.docs.forEach((doc) => console.log(doc.data()));

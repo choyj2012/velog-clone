@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
+import { FeedSortContext } from "../context/FeedSortContext";
 
 export default function FeedController() {
 
+  const {_, setSortBy} = useContext(FeedSortContext);
   const [isSelected, setIsSelected] = useState(0);
-  const btnText = ['버튼1', '버튼2', '버튼3'];
+  const btnText = ['최신 순', '제목 순'];
+  const sort = ['date', 'title'];
+
   return (
     <FeedControlbox>
       {btnText
@@ -12,7 +16,10 @@ export default function FeedController() {
           return (
             <FeedControlBtn
               key={i}
-              handleClick={() => setIsSelected(i)}
+              handleClick={() => {
+                setIsSelected(i);
+                setSortBy(sort[i]);
+              }}
               isSelected={isSelected === i}
               text={text}
             />

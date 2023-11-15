@@ -2,12 +2,13 @@ import styled from "styled-components"
 import { Link } from "react-router-dom"
 import Card from "./Card"
 import Header from "../component/Header"
-import { Suspense, useEffect, useState } from "react"
+import { Suspense, useContext, useEffect, useState } from "react"
 import { getAllPost, getAllPostbyParam } from "../../firebase"
 import { useInfiniteQuery, useQuery } from "react-query"
 import { useInView } from "react-intersection-observer"
 import { Fragment } from "react"
 import FeedController from "./FeedController"
+import FeedSortContextProvider, { FeedSortContext } from "../context/FeedSortContext"
 
 export default function Home() {
 
@@ -15,13 +16,15 @@ export default function Home() {
     <>
       <Header />
       <MainFeed>
-        <FeedHeader>
-          <FeedController/>
-        </FeedHeader>
+        <FeedSortContextProvider>
+          <FeedHeader>
+            <FeedController />
+          </FeedHeader>
 
-        <Suspense fallback={<h2>Loading...</h2>}>
-          <Feed />
-        </Suspense>
+          <Suspense fallback={<h2>Loading...</h2>}>
+            <Feed />
+          </Suspense>
+        </FeedSortContextProvider>
       </MainFeed>
     </>
   );
@@ -29,6 +32,7 @@ export default function Home() {
 
 const Feed = () => {
 
+  const {sortBy, } = useContext(FeedSortContext);
   const {ref, inView} = useInView();
   // const {data: posts, isLoading: isPostsLoading } = useQuery(
   //   ["load-posts"],
@@ -38,15 +42,15 @@ const Feed = () => {
   //     suspense: true,
   //   }
   // )
-
+  
   const {
     data: posts,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery(
-    ["load-posts"],
-    async ({ pageParam }) => getAllPostbyParam({ pageParam }),
+    ["load-posts", sortBy],
+    async ({ pageParam }) => getAllPostbyParam({ pageParam, sortBy }),
     {
       getNextPageParam: (querySnapshot) => {
         if (querySnapshot.size < 20) return undefined;
