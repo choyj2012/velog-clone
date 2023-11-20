@@ -1,4 +1,4 @@
-import { Suspense } from "react"
+import { Suspense, useContext } from "react"
 import { useParams } from "react-router"
 import { getPost, deletePost } from "../../firebase";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import MDEditor from "@uiw/react-md-editor"
 import { QueryClient, useQuery, useQueryClient } from "react-query";
 import Comments from "./Comments";
 import { ErrorBoundary } from "react-error-boundary";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Post() {
   
@@ -46,6 +47,7 @@ const PostContent = ({postId}) => {
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { isLoggedIn, user } = useContext(AuthContext);
   const { data: postData, isLoading: isPostLoading } = useQuery(
     ["load-post", postId],
     () => getPost(postId),
@@ -57,6 +59,16 @@ const PostContent = ({postId}) => {
     }
   );
 
+  const handleEditPost = () => {
+    //navigate({pathname: `/write`, search: `?id=${postId}`});
+  }
+
+  const handleDeletePost = async () => {
+    await deletePost(postId);
+    queryClient.invalidateQueries("load-posts");
+    queryClient.removeQueries("load-post", postId);
+    navigate("/");
+  }
   return (
     <>
       {/* <button
@@ -89,19 +101,12 @@ const PostContent = ({postId}) => {
             })}
           </div>
         </div>
-        <div>
-          <span>수정</span> |{" "}
-          <span
-            onClick={async () => {
-              await deletePost(postId);
-              queryClient.invalidateQueries('load-posts');
-              navigate("/");
-              queryClient.removeQueries('load-post', postId);
-            }}
-          >
-            삭제
-          </span>
-        </div>
+
+        {isLoggedIn && user.uid === postData.uid && (
+          <div>
+            <span onClick={handleEditPost}>수정</span> | <span onClick={handleDeletePost}>삭제</span>
+          </div>
+        )}
       </div>
 
       <MDEditor
