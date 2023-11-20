@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../component/Header";
 import MDEditor from "@uiw/react-md-editor"
-import { useQuery } from "react-query";
+import { QueryClient, useQuery, useQueryClient } from "react-query";
 import Comments from "./Comments";
+import { ErrorBoundary } from "react-error-boundary";
 
 export default function Post() {
   
@@ -17,13 +18,15 @@ export default function Post() {
     <>
       <Header />
       <PostWrapper>
-        <Suspense fallback={<h2>Loading...</h2>}>
-          <PostContent postId={postId} />
-        </Suspense>
+        <ErrorBoundary fallback={<h1>page not exist</h1>}>
+          <Suspense fallback={<h2>Loading...</h2>}>
+            <PostContent postId={postId} />
 
-        <Suspense fallback={<h2>Loading...</h2>}>
-          <Comments postId={postId} />
-        </Suspense>
+            <Suspense fallback={<h2>Loading...</h2>}>
+              <Comments postId={postId} />
+            </Suspense>
+          </Suspense>
+        </ErrorBoundary>
       </PostWrapper>
     </>
   );
@@ -41,6 +44,7 @@ const PostWrapper = styled.div`
 
 const PostContent = ({postId}) => {
 
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { data: postData, isLoading: isPostLoading } = useQuery(
     ["load-post", postId],
@@ -49,20 +53,57 @@ const PostContent = ({postId}) => {
       suspense: true,
       refetchOnWindowFocus: false,
       staleTime: 1000*20,
+      useErrorBoundary: true,
     }
   );
 
   return (
     <>
-      <button
+      {/* <button
         onClick={async () => {
           await deletePost(postId);
           navigate("/");
         }}
       >
         delete this post
-      </button>
-      <h1>{postData.title}</h1>
+      </button> */}
+      <div style={{ fontSize: "3rem", marginBottom: "1.5rem" }}>
+        {postData.title}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <div style={{ display: "flex", gap: "10px" }}>
+          <div>{postData.author}</div>
+          <div> | </div>
+          <div>
+            {new Date(postData.date.seconds * 1000).toLocaleString("ko-KR", {
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+            })}
+          </div>
+        </div>
+        <div>
+          <span>수정</span> |{" "}
+          <span
+            onClick={async () => {
+              await deletePost(postId);
+              queryClient.invalidateQueries('load-posts');
+              navigate("/");
+              queryClient.removeQueries('load-post', postId);
+            }}
+          >
+            삭제
+          </span>
+        </div>
+      </div>
+
       <MDEditor
         value={postData.content}
         preview="preview"
