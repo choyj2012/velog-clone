@@ -1,12 +1,15 @@
 import { useQuery, useQueryClient, useMutation } from "react-query";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
 
 import { getComments, addComment } from "../../firebase";
+import { AuthContext } from "../context/AuthContext";
+
 const Comments = ({postId}) => {
 
   const queryClient = useQueryClient();
-  const [comment, setComment] = useState('');
+  const {isLoggedIn, user} = useContext(AuthContext);
+  const [comment, setComment] = useState(isLoggedIn ? '' : '로그인 필요');
 
   const {data: comments, isLoading: isCommentsLoading } = useQuery(
     ["load-comments", postId],
@@ -31,14 +34,16 @@ const Comments = ({postId}) => {
   }
 
   const handleAddComment = async () => {
-    mutate({postId: postId, name: 'name', comment: comment});
+    if(comment.trim() === '') return;
+    
+    mutate({postId: postId, name: user.displayName, comment: comment});
     setComment('');
   }
   return (
     <CommentWrapper>
       <h2>{comments.length} Comments</h2>
-      <CommentTextArea onChange={handleTextAreaHeight} value={comment} />
-      <AddCommentBtn onClick={handleAddComment}>댓글 작성</AddCommentBtn>
+      <CommentTextArea onChange={handleTextAreaHeight} value={comment} disabled={!isLoggedIn}/>
+      <AddCommentBtn onClick={handleAddComment} disabled={!isLoggedIn}>댓글 작성</AddCommentBtn>
 
       {comments.map((item) => {
         return (
