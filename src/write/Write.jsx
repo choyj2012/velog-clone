@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { useNavigate } from 'react-router-dom'
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { useQueryClient } from "react-query";
 
 const mkdStr = `
 # title
@@ -15,6 +16,7 @@ export default function Write() {
   const [value, setValue] = useState(mkdStr);
   const navigate = useNavigate();
   const {isLoggedIn, user} = useContext(AuthContext);
+  const queryClient = useQueryClient();
 
   //로그인 상태인지 확인
   useEffect(() => {
@@ -22,8 +24,9 @@ export default function Write() {
   }, [])
 
   const upload = () => {
-    const newPost = new createPostObject(title, value, user.displayName);
+    const newPost = new createPostObject(title, value, user.displayName, user.uid);
     addPost(newPost);
+    queryClient.invalidateQueries("load-posts");
     navigate('/');
   }
   

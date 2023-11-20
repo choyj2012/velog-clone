@@ -112,12 +112,13 @@ const post = {
   likesCnt: 2,
 }
 
-export function createPostObject(title, content, author) {
+export function createPostObject(title, content, author, uid) {
   const p = {
     title: title,
     content: content,
     date: Timestamp.fromDate(new Date()),
     author: author,
+    uid: uid,
     commentsCnt: 0,
     comment: [],
     likesCnt: 0,
