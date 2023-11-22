@@ -68,6 +68,18 @@ export async function addPost(newPost) {
   }
 }
 
+export async function updatePost(id, title, content) {
+  console.log('updatePost()');
+  try {
+    const docRef = doc(db, "posts", id);
+    await updateDoc(docRef, {
+      title: title,
+      content: content,
+    });
+  } catch (e) {
+    console.error("Error edit post: ", e);
+  }
+}
 export async function deletePost(_id){
   console.log('deletePost()');
   await deleteDoc(doc(db, "posts", _id));

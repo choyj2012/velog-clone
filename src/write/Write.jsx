@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import MDEditor, {commands} from "@uiw/react-md-editor";
-import { addPost, createPostObject } from "../../firebase";
+import { addPost, createPostObject, getPost, updatePost } from "../../firebase";
 import styled from "styled-components";
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useQueryClient } from "react-query";
@@ -12,21 +12,36 @@ const mkdStr = `
 ![image](https://nextjs.org/_next/image?url=%2Fdocs%2Fdark%2Fserver-rendering-with-streaming.png&w=1920&q=75&dpl=dpl_k9JgN7S2Z3LfqB6skeTLi9zU4W6G)
 `
 export default function Write() {
+  const editPost = useLocation().state;
+  const [isEdit, setIsEdit] = useState(false);
   const [title, setTitle] = useState("untitled");
   const [value, setValue] = useState(mkdStr);
   const navigate = useNavigate();
   const {isLoggedIn, user} = useContext(AuthContext);
   const queryClient = useQueryClient();
-
   //로그인 상태인지 확인
   useEffect(() => {
     if(!isLoggedIn) navigate('/');
   }, [])
 
+  useEffect(() => {
+    if(editPost?.postData){
+      setTitle(editPost.postData.title);
+      setValue(editPost.postData.content);
+      setIsEdit(true);
+    }
+  }, []);
+
   const upload = () => {
-    const newPost = new createPostObject(title, value, user.displayName, user.uid);
-    addPost(newPost);
-    queryClient.invalidateQueries("load-posts");
+    if(isEdit){
+      updatePost(editPost.postId, title, value);
+      queryClient.invalidateQueries('load-post', editPost.postId);
+    }
+    else {
+      const newPost = new createPostObject(title, value, user.displayName, user.uid);
+      addPost(newPost);
+    }
+    queryClient.resetQueries('load-posts');
     navigate('/');
   }
   

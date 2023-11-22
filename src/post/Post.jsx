@@ -60,12 +60,17 @@ const PostContent = ({postId}) => {
   );
 
   const handleEditPost = () => {
-    //navigate({pathname: `/write`, search: `?id=${postId}`});
-  }
+    navigate(`/write`, {
+      state: {
+        postData: postData,
+        postId: postId,
+      },
+    });
+  };
 
   const handleDeletePost = async () => {
     await deletePost(postId);
-    queryClient.invalidateQueries("load-posts");
+    queryClient.resetQueries("load-posts");
     queryClient.removeQueries("load-post", postId);
     navigate("/");
   }
