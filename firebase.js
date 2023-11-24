@@ -94,9 +94,10 @@ export async function getComments(postId) {
   return querySnapshot.docs.map((doc) => ({_id: doc.id, ...doc.data()}));
 }
 
-export async function addComment({postId, name, comment}) {
+export async function addComment({postId, name, comment, uid}) {
   console.log('addComment()');
   const newComment = {
+    uid: uid,
     name: name,
     comment: comment,
     date: Timestamp.fromDate(new Date())
@@ -112,6 +113,15 @@ export async function addComment({postId, name, comment}) {
   }
 }
 
+export async function deleteComment({postId, commentId}){
+  console.log('deleteComment()');
+  console.log(postId, commentId);
+  try {
+    await deleteDoc(doc(db, "posts", postId, "comments", commentId));
+  } catch (e) {
+    console.error("Error: Delete Comment Error");
+  }
+}
 // -------------------------------------- //
 
 const post = {

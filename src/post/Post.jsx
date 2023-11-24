@@ -125,7 +125,7 @@ const PostContent = ({postId}) => {
       <div
         style={{
           height: "3px",
-          backgroundColor: "black",
+          backgroundColor: 'var(--text)',
           marginBottom: "1rem",
           marginTop: "6rem",
         }}

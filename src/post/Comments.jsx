@@ -1,8 +1,8 @@
 import { useQuery, useQueryClient, useMutation } from "react-query";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import styled from "styled-components";
 
-import { getComments, addComment } from "../../firebase";
+import { getComments, addComment, deleteComment } from "../../firebase";
 import { AuthContext } from "../context/AuthContext";
 
 const Comments = ({postId}) => {
@@ -10,6 +10,7 @@ const Comments = ({postId}) => {
   const queryClient = useQueryClient();
   const {isLoggedIn, user} = useContext(AuthContext);
   const [comment, setComment] = useState(isLoggedIn ? '' : '로그인 필요');
+  const textAreaRef = useRef(null);
 
   const {data: comments, isLoading: isCommentsLoading } = useQuery(
     ["load-comments", postId],
@@ -27,38 +28,47 @@ const Comments = ({postId}) => {
     }
   });
 
+  const {mutate: mutate2} = useMutation(deleteComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('load-comments');
+    }
+  })
+
   const handleTextAreaHeight = (e) => {
     setComment(e.target.value);
-    e.target.style.height = '0px';
-    e.target.style.height = e.target.scrollHeight + 'px';
+    textAreaRef.current.style.height = '0px';
+    textAreaRef.current.style.height = textAreaRef.current.scrollHeight + 'px';
   }
 
   const handleAddComment = async () => {
     if(comment.trim() === '') return;
     
-    mutate({postId: postId, name: user.displayName, comment: comment});
+    mutate({postId: postId, name: user.displayName, comment: comment, uid: user.uid});
     setComment('');
+    textAreaRef.current.style.height = '4rem';
+  }
+
+  const handleDeleteComment = (commentId) => {
+    mutate2({postId: postId, commentId: commentId});
   }
   return (
     <CommentWrapper>
       <h2>{comments.length} Comments</h2>
-      <CommentTextArea onChange={handleTextAreaHeight} value={comment} disabled={!isLoggedIn}/>
+      <CommentTextArea onChange={handleTextAreaHeight} value={comment} disabled={!isLoggedIn} ref={textAreaRef}/>
       <AddCommentBtn onClick={handleAddComment} disabled={!isLoggedIn}>댓글 작성</AddCommentBtn>
 
-      {comments.map((item) => {
+      {comments.map((comment) => {
         return (
-          <div
-            key={item._id}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <p>
-              {item.name} - {item.comment}
-            </p>
-            <p>{new Date(item.date.seconds * 1000).toLocaleString("ko-KR")}</p>
-          </div>
+          <Comment key={comment._id}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>{comment.name}</div>
+              <div>
+                {new Date(comment.date.seconds * 1000).toLocaleString("ko-KR")}
+                {comment.uid === user.uid && <span onClick={() => handleDeleteComment(comment._id)}>{" 삭제"}</span>}
+              </div>
+            </div>
+            <div style={{lineHeight: '2'}}>- {comment.comment}</div>
+          </Comment>
         );
       })}
     </CommentWrapper>
@@ -71,6 +81,7 @@ const CommentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 1rem;
+  margin-bottom: 10rem;
 `
 const CommentTextArea = styled.textarea`
   resize: none;
@@ -82,6 +93,12 @@ const CommentTextArea = styled.textarea`
   color: var(--text);
 `
 
+const Comment = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  margin-top: 30px;
+`
 const AddCommentBtn = styled.button`
   font-size: 1rem;
   align-self: flex-end;
