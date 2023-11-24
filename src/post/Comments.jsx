@@ -22,13 +22,13 @@ const Comments = ({postId}) => {
     }
   )
 
-  const {mutate} = useMutation(addComment, {
+  const addCom = useMutation(addComment, {
     onSuccess: () => {
       queryClient.invalidateQueries('load-comments');
     }
   });
 
-  const {mutate: mutate2} = useMutation(deleteComment, {
+  const delCom = useMutation(deleteComment, {
     onSuccess: () => {
       queryClient.invalidateQueries('load-comments');
     }
@@ -43,13 +43,13 @@ const Comments = ({postId}) => {
   const handleAddComment = async () => {
     if(comment.trim() === '') return;
     
-    mutate({postId: postId, name: user.displayName, comment: comment, uid: user.uid});
+    addCom.mutate({postId: postId, name: user.displayName, comment: comment, uid: user.uid});
     setComment('');
     textAreaRef.current.style.height = '4rem';
   }
 
   const handleDeleteComment = (commentId) => {
-    mutate2({postId: postId, commentId: commentId});
+    delCom.mutate({postId: postId, commentId: commentId});
   }
   return (
     <CommentWrapper>
