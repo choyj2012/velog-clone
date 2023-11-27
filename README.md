@@ -1,8 +1,31 @@
-# React + Vite
+# PostIt
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> 마크다운 형식으로 글을 작성하고 업로드 할 수 있는 사이트
 
-Currently, two official plugins are available:
+## 사용한 스택
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### html, css, javascript
+
+- 프론트엔드
+
+### styld-component
+
+-  
+
+### react-query
+
+- 리액트 애플리케이션에서 서버 상태 가져오기, 캐싱, 동기화 및 업데이트를 보다 쉽게 다룰 수 있도록 도와주는 라이브러리.
+
+### firebase
+
+- 데이터베이스, 인증 등 백엔드 서비스를 별도로 구축 할 필요 없이 통합하여 제공해 주기때문에 선택.
+
+## 프로젝트 설명
+
+- 여러분의 애플리케이션이 무엇을 하는지,
+- 왜 그 기술을 사용했는지,
+- 여러분이 당면했던 문제나 나중에 추가하고 싶은 기능이 무엇인지
+
+## 기능
+
+1. 
