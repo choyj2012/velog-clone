@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDoc, getFirestore, increment, limit, orderBy, startAfter, updateDoc } from "firebase/firestore";
+import { and, getDoc, getFirestore, increment, limit, or, orderBy, startAfter, updateDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -19,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 import { 
-  collection, doc, addDoc, getDocs, deleteDoc, Timestamp, query
+  collection, doc, addDoc, getDocs, deleteDoc, Timestamp, query, where,
 } from "firebase/firestore";
 
 export async function getAllPost(){
@@ -83,6 +83,24 @@ export async function updatePost(id, title, content) {
 export async function deletePost(_id){
   console.log('deletePost()');
   await deleteDoc(doc(db, "posts", _id));
+}
+
+export async function searchPost(queryText) {
+  console.log('searchPost()', queryText);
+  if(queryText === '') return null;
+
+  const q = query(
+    collection(db, "posts"),
+    orderBy('title'),
+    and(
+      where("title", ">=", queryText),
+      where("title", "<=", queryText + "\uf8ff")
+    )
+  );
+  
+  const querySnapshot = await getDocs(q);
+  console.log(querySnapshot);
+  return querySnapshot;
 }
 
 export async function getComments(postId) {
