@@ -109,7 +109,7 @@ const PostContent = ({postId}) => {
 
         {isLoggedIn && user.uid === postData.uid && (
           <div>
-            <span onClick={handleEditPost}>수정</span> | <span onClick={handleDeletePost}>삭제</span>
+            <span onClick={handleEditPost}><u>수정</u></span> | <span onClick={handleDeletePost}><u>삭제</u></span>
           </div>
         )}
       </div>
