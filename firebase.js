@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { and, getDoc, getFirestore, increment, limit, or, orderBy, startAfter, updateDoc } from "firebase/firestore";
+import { and, getDoc, getFirestore, increment, limit, or, orderBy, setDoc, startAfter, updateDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -136,6 +136,9 @@ export async function deleteComment({postId, commentId}){
   console.log(postId, commentId);
   try {
     await deleteDoc(doc(db, "posts", postId, "comments", commentId));
+    updateDoc(doc(db, "posts", postId), {
+      commentsCnt: increment(-1)
+    })
   } catch (e) {
     console.error("Error: Delete Comment Error");
   }

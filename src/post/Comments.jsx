@@ -64,7 +64,7 @@ const Comments = ({postId}) => {
               <div>{comment.name}</div>
               <div>
                 {new Date(comment.date.seconds * 1000).toLocaleString("ko-KR")}
-                {comment.uid === user.uid && <span onClick={() => handleDeleteComment(comment._id)}>{" 삭제"}</span>}
+                {isLoggedIn &&comment.uid === user.uid && <span onClick={() => handleDeleteComment(comment._id)}>{" 삭제"}</span>}
               </div>
             </div>
             <div style={{lineHeight: '2'}}>- {comment.comment}</div>
