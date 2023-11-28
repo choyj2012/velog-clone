@@ -66,13 +66,13 @@ export default function Header() {
             </Link>
 
             <ProfileImg $imgURL={user.photoURL} />
-            <HeaderBtn
+            {/* <HeaderBtn
               onClick={() => {
                 console.log(getCurrentUser());
               }}
             >
               MyPage
-            </HeaderBtn>
+            </HeaderBtn> */}
             <HeaderBtn onClick={handleLogout}>로그아웃</HeaderBtn>
           </>
         ) : (
@@ -119,7 +119,7 @@ const HeaderBtn = styled.div`
   background-color: var(--background0);
   border: 1px solid var(--text);
   border-radius: 15px;
-  font-size: 1.25rem;
+  font-size: inherit;
   padding: 10px;
 
   &:hover {
@@ -130,11 +130,14 @@ const HeaderBtn = styled.div`
 
 const ProfileImg = styled.div`
   cursor: pointer;
+  min-width: 2.5rem;
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
   background-size: 100%;
   background-image: ${(props) => `url(${props.$imgURL})`};
+  background-repeat: no-repeat;
+  object-fit: center;
 `
 
 const HeaderBox = styled.div`
@@ -144,4 +147,8 @@ const HeaderBox = styled.div`
   height: 5rem;
   font-size: 1.5rem;
   padding-top: 1rem;
+
+  @media (max-width: 767px) {
+    font-size: 1rem;
+  };
 `
