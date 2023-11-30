@@ -13,7 +13,7 @@ import {
 
 export const signInWithGoogle = () => {
   const auth = getAuth();
-  setPersistence(auth, browserSessionPersistence)
+  setPersistence(auth, browserLocalPersistence)
     .then(async () => {
       const provider = new GoogleAuthProvider();
       try {
