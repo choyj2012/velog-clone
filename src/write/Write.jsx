@@ -8,13 +8,14 @@ import { AuthContext } from "../context/AuthContext";
 import { useQueryClient } from "react-query";
 
 const mkdStr = `
-# title
-![image](https://nextjs.org/_next/image?url=%2Fdocs%2Fdark%2Fserver-rendering-with-streaming.png&w=1920&q=75&dpl=dpl_k9JgN7S2Z3LfqB6skeTLi9zU4W6G)
+# 제목
+## 가
+- 내용
 `
 export default function Write() {
   const editPost = useLocation().state;
   const [isEdit, setIsEdit] = useState(false);
-  const [title, setTitle] = useState("untitled");
+  const [title, setTitle] = useState("");
   const [value, setValue] = useState(mkdStr);
   const navigate = useNavigate();
   const {isLoggedIn, user} = useContext(AuthContext);
@@ -55,7 +56,7 @@ export default function Write() {
         style={{ height: "100vh" }}
       >
         <ControlBox>
-          <TitleBox
+          <TitleBox placeholder="Title" autoFocus
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
