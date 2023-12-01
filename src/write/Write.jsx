@@ -115,4 +115,8 @@ const ControlBtn = styled.span`
   &:hover {
     background-color: var(--hover-layer);
   }
+
+  @media (max-width: 480px){
+    font-size: 1rem;
+  }
 `

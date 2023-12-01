@@ -64,9 +64,9 @@ export default function Header() {
 
         {isLoggedIn ? (
           <>
-            <Link to={"/write"}>
+            <LinkBtn to={"/write"}>
               <HeaderBtn>새 글 작성</HeaderBtn>
-            </Link>
+            </LinkBtn>
 
             <ProfileImg $imgURL={user.photoURL} />
             {/* <HeaderBtn
@@ -130,6 +130,11 @@ const SvgBtn = styled.div`
     background-color: var(--hover-layer);
   }
 `
+const LinkBtn = styled(Link)`
+  @media (max-width: 480px) {
+    display: none;
+  }
+`
 const HeaderBtn = styled.div`
   background-color: var(--background0);
   border: 1px solid var(--text);
@@ -140,10 +145,6 @@ const HeaderBtn = styled.div`
   &:hover {
     background-color: var(--text);
     color: var(--background0);
-  }
-
-  @media (max-width: 480px) {
-    display: none;
   }
 `
 
