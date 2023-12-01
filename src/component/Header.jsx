@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 import DarkmodeSvg from '../assets/dark-mode.svg?react';
 import LightmodeSvg from '../assets/light-mode.svg?react';
 import SearchSvg from '../assets/search-icon.svg?react';
+import DownSvg from '../assets/down.svg?react';
 import { useEffect } from "react";
 
 
@@ -17,6 +18,7 @@ export default function Header() {
   const navigate = useNavigate();
   const [isDark, setIsDark] = useState(false);
   const { isLoggedIn, user } = useContext(AuthContext);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setIsDark(document.documentElement.getAttribute('data-color-mode') === 'dark');
@@ -73,13 +75,24 @@ export default function Header() {
             >
               MyPage
             </HeaderBtn> */}
-            <HeaderBtn onClick={handleLogout}>로그아웃</HeaderBtn>
+            {/* <HeaderBtn onClick={handleLogout}>로그아웃</HeaderBtn> */}
+            <SvgBtn onClick={() => setIsOpen(p => !p)}>
+              <DownSvg 
+                stroke={isDark ? "#FFF" : "#000"}
+                transform={isOpen ? 'rotate(180)' : 'rotate(0)'}
+              />
+            </SvgBtn>
           </>
         ) : (
           <>
             <HeaderBtn onClick={handleLogin}>로그인</HeaderBtn>
           </>
         )}
+
+        <Dropbox $isOpen={isOpen}>
+          <div onClick={() => navigate('/write')}>새 글 작성</div>
+          <div onClick={handleLogout}>로그아웃</div>
+        </Dropbox>
       </ControlBox>
     </HeaderBox>
   );
@@ -97,6 +110,7 @@ const ControlBox = styled.div`
   align-items: center;
   height: 3rem;
   gap: 8px;
+  position: relative;
 `
 
 const SvgBtn = styled.div`
@@ -118,13 +132,17 @@ const SvgBtn = styled.div`
 const HeaderBtn = styled.div`
   background-color: var(--background0);
   border: 1px solid var(--text);
-  border-radius: 15px;
+  border-radius: 30px;
   font-size: inherit;
-  padding: 10px;
+  padding: 5px 10px;
 
   &:hover {
     background-color: var(--text);
     color: var(--background0);
+  }
+
+  @media (max-width: 480px) {
+    display: none;
   }
 `
 
@@ -145,10 +163,32 @@ const HeaderBox = styled.div`
   flex-direction: row;
   justify-content: space-between;
   height: 5rem;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   padding-top: 1rem;
 
   @media (max-width: 767px) {
     font-size: 1rem;
   };
+`
+
+const Dropbox = styled.div`
+  position: absolute;
+  display: ${(props) => props.$isOpen ? 'flex' : 'none'};
+  flex-direction: column;
+  width: 12rem;
+  right: 0;
+  top: 100%;
+  background-color: var(--background1);
+  margin-top: 1rem;
+  z-index: 100;
+  & > div {
+    border: 1px solid var(--background0);
+    text-align: center;
+    padding: 15px;
+    font-size: 1.25rem;
+
+    &:hover {
+      background-color: var(--background3);
+    }
+  }
 `
