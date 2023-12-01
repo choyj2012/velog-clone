@@ -28,6 +28,7 @@ export default function Header() {
     signInWithGoogle();
   }
   const handleLogout = () => {
+    setIsOpen(p => !p);
     signOutWithGoogle();
   }
   return (
