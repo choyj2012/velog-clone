@@ -40,6 +40,7 @@ export default function Write() {
     }
     else {
       const newPost = new createPostObject(title, value, user.displayName, user.uid);
+      if(newPost.title === '') newPost.title = 'untitled';
       addPost(newPost);
     }
     queryClient.resetQueries('load-posts');
